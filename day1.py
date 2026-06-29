@@ -12,7 +12,7 @@ df = kagglehub.load_dataset(
 cleaned_df = df
 
 for i in df:
-  if(df[i].dtype=="object"):
+  if(df[i].dtype=="int"):
     print(i)
 
 cleaned_df = pd.get_dummies(cleaned_df,columns=["Sex"])
@@ -29,11 +29,26 @@ cleaned_df["Age"].isnull().sum()
 import matplotlib.pyplot as plt
 
 cleaned_df["Age"].plot.box()
+
 plt.show()
+
+cleaned_df["Pclass"].plot.box()
+
+cleaned_df["SibSp"].plot.box()
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+numerical_cols = ["Age", "Fare", "SibSp", "Parch"]
+
+cleaned_df[numerical_cols] = scaler.fit_transform(
+    cleaned_df[numerical_cols]
+)
+
+cleaned_df
 
 cleaned_df["Deck"] = cleaned_df["Cabin"].str[0]
 cleaned_df["Deck"] = cleaned_df["Deck"].fillna(cleaned_df["Deck"].mode())
 cleaned_df = pd.get_dummies(cleaned_df, columns=["Deck"])
 cleaned_df = cleaned_df.drop(columns=["Cabin"])
-
-cleaned_df
